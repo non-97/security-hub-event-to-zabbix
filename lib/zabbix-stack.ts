@@ -1,16 +1,31 @@
-import * as cdk from 'aws-cdk-lib';
-import { Construct } from 'constructs';
-// import * as sqs from 'aws-cdk-lib/aws-sqs';
+import * as cdk from "aws-cdk-lib";
+import { Construct } from "constructs";
+import { Vpc } from "./constructs/vpc";
+import { Ec2Instance } from "./constructs/ec2-instance";
+import { CloudWatchAlarm } from "./constructs/cloudwatch-alarm";
+import { LambdaFunction } from "./constructs/lambda";
 
 export class ZabbixStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
     super(scope, id, props);
 
-    // The code that defines your stack goes here
+    // VPC
+    const vpc = new Vpc(this, "Vpc");
 
-    // example resource
-    // const queue = new sqs.Queue(this, 'ZabbixQueue', {
-    //   visibilityTimeout: cdk.Duration.seconds(300)
-    // });
+    // Zabbix Server
+    const zabbixServer = new Ec2Instance(this, "ZabbixServer", {
+      vpc: vpc.vpc,
+      securityGroup: vpc.zabbixServerSg,
+    });
+
+    // CloudWatch Alarm
+    new CloudWatchAlarm(this, "CloudWatchAlarm");
+
+    // Lambda Function
+    new LambdaFunction(this, "LambdaFunction", {
+      vpc: vpc.vpc,
+      securityGroup: vpc.zabbixSenderSg,
+      zabbixServerIpAddress: zabbixServer.instance.instancePrivateIp,
+    });
   }
 }
