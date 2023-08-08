@@ -48,6 +48,7 @@ export class Ec2Instance extends Construct {
       ssmSessionPermissions: true,
       securityGroup: props.securityGroup,
       userData,
+      requireImdsv2: true,
     });
   }
 }
