@@ -10,8 +10,6 @@ export interface LambdaFunctionProps {
 }
 
 export class LambdaFunction extends Construct {
-  readonly zabbixSenderSg: cdk.aws_ec2.ISecurityGroup;
-
   constructor(scope: Construct, id: string, props: LambdaFunctionProps) {
     super(scope, id);
 

@@ -27,7 +27,7 @@ export class Ec2Instance extends Construct {
     // EC2 Instance
     this.instance = new cdk.aws_ec2.Instance(this, "Default", {
       machineImage: cdk.aws_ec2.MachineImage.lookup({
-        name: "RHEL-9.2.0_HVM-*",
+        name: "RHEL-9.2.0_HVM-20230615-x86_64-3-Hourly2-GP2",
         owners: ["309956199498"],
       }),
       instanceType: new cdk.aws_ec2.InstanceType("t3.small"),
